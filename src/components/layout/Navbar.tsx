@@ -27,14 +27,14 @@ function NavIcon({ name, ...props }: { name: string; size?: number; className?: 
 
 function NeptuneLogo() {
   return (
-    <Link href="/" scroll={true} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="flex items-center gap-2 md:gap-2.5 group flex-shrink-0">
-      <div className="w-8 h-8 md:w-9 md:h-9 bg-purple-gradient rounded-[10px] flex items-center justify-center shadow-purple-sm group-hover:shadow-purple transition-all">
+    <Link href="/" scroll={true} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="flex items-center gap-2 md:gap-2.5 group flex-shrink-0 min-w-0">
+      <div className="w-8 h-8 md:w-9 md:h-9 bg-purple-gradient rounded-[10px] flex items-center justify-center shadow-purple-sm group-hover:shadow-purple transition-all flex-shrink-0">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
           <path d="M12 2L4 7v10l8 5 8-5V7L12 2zm0 2.18L18 8v8l-6 3.82L6 16V8l6-3.82z" fill="white"/>
           <path d="M9 9l6 3-6 3V9z" fill="white"/>
         </svg>
       </div>
-      <span className="font-display text-base md:text-lg font-bold text-text tracking-tight">
+      <span className="font-display text-base md:text-lg font-bold text-text tracking-tight truncate">
         Neptune<span className="text-purple-600">Markets</span>
       </span>
     </Link>
@@ -72,9 +72,9 @@ export default function Navbar() {
   return (
     <>
       {/* ── Navbar bar ── */}
-      <div className="fixed top-[37px] left-0 right-0 z-[90] px-3 md:px-8 transition-all duration-300">
+      <div className="fixed top-[37px] left-0 right-0 z-[90] px-2 md:px-8 transition-all duration-300">
         <nav ref={navRef} className={cn(
-          "max-w-8xl mx-auto flex items-center justify-between h-14 md:h-16 px-4 md:px-7 rounded-xl",
+          "max-w-8xl mx-auto flex items-center justify-between h-14 md:h-16 px-3 md:px-7 rounded-xl",
           "liquid-glass transition-all duration-300",
           scrolled
             ? "shadow-[0_8px_40px_rgba(108,59,228,0.14)] bg-white/90"
@@ -140,7 +140,7 @@ export default function Navbar() {
           </ul>
 
           {/* Actions */}
-          <div className="flex items-center gap-1.5 md:gap-2">
+          <div className="flex items-center gap-1.5 md:gap-2 flex-shrink-0">
             <LanguageSwitcher />
             {/* Login — visible from sm on desktop only */}
             <button className="hidden lg:block text-sm font-semibold text-text-muted px-4 py-2.5 rounded-xl border-[1.5px] border-border-strong hover:text-purple-600 hover:border-purple-300 hover:bg-purple-50 transition-all">
@@ -154,10 +154,10 @@ export default function Navbar() {
             {/* Hamburger */}
             <button
               onClick={() => setMobileOpen(true)}
-              className="lg:hidden flex items-center justify-center w-9 h-9 border-[1.5px] border-border-strong rounded-xl text-text-muted hover:text-text hover:bg-purple-50 transition-all"
+              className="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl bg-white border-[1.5px] border-slate-300 text-slate-700 hover:border-purple-400 hover:text-purple-600 hover:bg-purple-50 active:scale-95 transition-all shadow-sm flex-shrink-0"
               aria-label="Open menu"
             >
-              <Menu size={18} />
+              <Menu size={20} />
             </button>
           </div>
         </nav>

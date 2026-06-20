@@ -181,93 +181,104 @@ function InstrumentRow({ row, entry }: { row: Row; entry?: PriceEntry }) {
   const bidColor = flash === "up" ? "#059669" : flash === "dn" ? "#dc2626" : "#0f172a";
 
   const GRID = "1.4fr 0.9fr 0.9fr 0.6fr 1fr 120px";
+  const rowStyle = {
+    background: rowBg || "white",
+    transition: flash === null
+      ? "background 0.8s ease, box-shadow 0.2s, border-color 0.2s"
+      : "box-shadow 0.2s, border-color 0.2s",
+  };
 
   return (
     <div
-      className="group grid items-center rounded-2xl bg-white border border-slate-200/80 hover:border-purple-200 hover:shadow-[0_4px_20px_rgba(108,59,228,0.09)] transition-all duration-200"
-      style={{
-        gridTemplateColumns: GRID,
-        background: rowBg || "white",
-        transition: flash === null
-          ? "background 0.8s ease, box-shadow 0.2s, border-color 0.2s"
-          : "box-shadow 0.2s, border-color 0.2s",
-        padding: "13px 18px",
-      }}
+      className="group rounded-2xl border border-slate-200/80 hover:border-purple-200 hover:shadow-[0_4px_20px_rgba(108,59,228,0.09)] transition-all duration-200"
+      style={rowStyle}
     >
-      {/* Instrument */}
-      <div className="flex items-center gap-3">
-        <RowIcon icon={row.icon} />
-        <div>
-          <div className="text-sm font-bold text-slate-800 font-mono leading-none tracking-tight">{row.display}</div>
-          <div className="text-[11px] text-slate-400 mt-0.5 font-body hidden sm:block">{row.name}</div>
+      {/* ── Mobile layout (< md) ── */}
+      <div className="flex items-center justify-between md:hidden px-4 py-3">
+        <div className="flex items-center gap-3">
+          <RowIcon icon={row.icon} />
+          <div>
+            <div className="text-sm font-bold text-slate-800 font-mono leading-none tracking-tight">{row.display}</div>
+            <div className="text-[11px] text-slate-400 mt-0.5 font-body">{row.name}</div>
+          </div>
+        </div>
+        <div className="text-right">
+          <div
+            className="font-mono font-semibold tabular-nums text-[13px] leading-none"
+            style={{ color: bidColor, transition: flash === null ? "color 0.5s ease" : "none" }}
+          >
+            {fmt(bid, row.decimals)}
+          </div>
+          <span className={`text-[11px] font-bold font-mono ${up ? "text-emerald-600" : "text-red-600"}`}>
+            {up ? "▲" : "▼"} {Math.abs(chg).toFixed(2)}%
+          </span>
         </div>
       </div>
 
-      {/* Sell / Bid */}
-      <div className="text-right">
-        <div
-          className="font-mono font-semibold tabular-nums text-[13.5px] leading-none"
-          style={{
-            color: bidColor,
-            transition: flash === null ? "color 0.5s ease" : "none",
-          }}
-        >
-          {fmt(bid, row.decimals)}
+      {/* ── Desktop layout (md+) ── */}
+      <div
+        className="hidden md:grid items-center"
+        style={{ gridTemplateColumns: GRID, padding: "13px 18px" }}
+      >
+        {/* Instrument */}
+        <div className="flex items-center gap-3">
+          <RowIcon icon={row.icon} />
+          <div>
+            <div className="text-sm font-bold text-slate-800 font-mono leading-none tracking-tight">{row.display}</div>
+            <div className="text-[11px] text-slate-400 mt-0.5 font-body">{row.name}</div>
+          </div>
         </div>
-        <div className="text-[9px] text-slate-400 uppercase tracking-widest mt-0.5 font-body hidden md:block">Sell</div>
-      </div>
 
-      {/* Buy / Ask */}
-      <div className="text-right hidden md:block">
-        <div className="font-mono font-semibold tabular-nums text-[13.5px] leading-none text-slate-500">
-          {fmt(ask, row.decimals)}
+        {/* Sell / Bid */}
+        <div className="text-right">
+          <div
+            className="font-mono font-semibold tabular-nums text-[13.5px] leading-none"
+            style={{ color: bidColor, transition: flash === null ? "color 0.5s ease" : "none" }}
+          >
+            {fmt(bid, row.decimals)}
+          </div>
+          <div className="text-[9px] text-slate-400 uppercase tracking-widest mt-0.5 font-body">Sell</div>
         </div>
-        <div className="text-[9px] text-slate-400 uppercase tracking-widest mt-0.5 font-body">Buy</div>
-      </div>
 
-      {/* Spread — number only */}
-      <div className="text-right hidden md:block">
-        <span className="font-mono font-semibold tabular-nums text-[13px] text-slate-500">
-          {row.spread}
-        </span>
-      </div>
+        {/* Buy / Ask */}
+        <div className="text-right">
+          <div className="font-mono font-semibold tabular-nums text-[13.5px] leading-none text-slate-500">
+            {fmt(ask, row.decimals)}
+          </div>
+          <div className="text-[9px] text-slate-400 uppercase tracking-widest mt-0.5 font-body">Buy</div>
+        </div>
 
-      {/* 24h Change */}
-      <div className="hidden md:flex items-center justify-end">
-        <span
-          className="inline-flex items-center gap-1 text-[12px] font-bold font-mono px-2.5 py-1 rounded-lg tabular-nums"
-          style={{
-            color: up ? "#059669" : "#dc2626",
-            background: up ? "rgba(5,150,105,0.08)" : "rgba(220,38,38,0.08)",
-            border: `1px solid ${up ? "rgba(5,150,105,0.15)" : "rgba(220,38,38,0.15)"}`,
-          }}
-        >
-          <span style={{ fontSize: 8, lineHeight: 1 }}>{up ? "▲" : "▼"}</span>
-          {up ? "+" : ""}{Math.abs(chg).toFixed(2)}%
-        </span>
-      </div>
+        {/* Spread */}
+        <div className="text-right">
+          <span className="font-mono font-semibold tabular-nums text-[13px] text-slate-500">
+            {row.spread}
+          </span>
+        </div>
 
-      {/* Mobile: bid + change */}
-      <div className="flex flex-col items-end gap-0.5 md:hidden">
-        <span
-          className="font-mono font-semibold tabular-nums text-[13px] leading-none"
-          style={{ color: bidColor, transition: flash === null ? "color 0.5s ease" : "none" }}
-        >
-          {fmt(bid, row.decimals)}
-        </span>
-        <span className={`text-[11px] font-bold font-mono ${up ? "text-emerald-600" : "text-red-600"}`}>
-          {up ? "▲" : "▼"} {Math.abs(chg).toFixed(2)}%
-        </span>
-      </div>
+        {/* 24h Change */}
+        <div className="flex items-center justify-end">
+          <span
+            className="inline-flex items-center gap-1 text-[12px] font-bold font-mono px-2.5 py-1 rounded-lg tabular-nums"
+            style={{
+              color: up ? "#059669" : "#dc2626",
+              background: up ? "rgba(5,150,105,0.08)" : "rgba(220,38,38,0.08)",
+              border: `1px solid ${up ? "rgba(5,150,105,0.15)" : "rgba(220,38,38,0.15)"}`,
+            }}
+          >
+            <span style={{ fontSize: 8, lineHeight: 1 }}>{up ? "▲" : "▼"}</span>
+            {up ? "+" : ""}{Math.abs(chg).toFixed(2)}%
+          </span>
+        </div>
 
-      {/* Action */}
-      <div className="hidden md:flex justify-end gap-2">
-        <a
-          href="/accounts"
-          className="text-[11px] font-bold text-white bg-purple-600 px-4 py-2 rounded-xl opacity-0 group-hover:opacity-100 hover:bg-purple-700 active:scale-95 transition-all whitespace-nowrap shadow-sm"
-        >
-          Trade Now
-        </a>
+        {/* Action */}
+        <div className="flex justify-end gap-2">
+          <a
+            href="/accounts"
+            className="text-[11px] font-bold text-white bg-purple-600 px-4 py-2 rounded-xl opacity-0 group-hover:opacity-100 hover:bg-purple-700 active:scale-95 transition-all whitespace-nowrap shadow-sm"
+          >
+            Trade Now
+          </a>
+        </div>
       </div>
     </div>
   );
